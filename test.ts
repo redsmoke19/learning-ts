@@ -1,15 +1,4 @@
-const office = {
-  "officeId": 45,
-  "isOpened": false,
-  "contacts": {
-    "phone": "050-555-55",
-    "email": "XXXXXXXXXXXXXXXX",
-    "address": {
-      "city": "Minsk",
-    }
-  }
-}
-
+// типизация объекта
 const info: {
   officeId: number,
   isOpened: boolean,

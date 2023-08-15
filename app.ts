@@ -44,3 +44,9 @@ const resultArr: string = skills
   .reduce((acc: string, s: string) => acc + s);
 
 console.log(resultArr);
+
+// Кортежи или Tuples (Это массив ограниченной длинны где каждый элемент у нас типизирован)
+const skillTuples: [number, string] = [1, "HTML"];
+const [id, skillName] = skillTuples;
+
+const skillTuples2: [number, string, ...boolean[]] = [1, "HTML", true, false];
