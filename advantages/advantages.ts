@@ -121,7 +121,7 @@ interface IUserPro {
 }
 
 function testPass(user: IUserPro) {
-  const t = user.password?.type
+  const t = user.password?.type;
 }
 
 //-- Void --//
@@ -131,17 +131,83 @@ function logIdVoid(id: string | number): void {
 }
 
 // Или мы можем вернуть что угодно, но этот возврат будет игнорироваться
+// Когда мы объявляем функцию и хотим игнорировать ее возврат, то вызываем void
 type voidFunc = () => void;
 
 const f1: voidFunc = () => {}; // Тут все ок
-const f2: voidFunc = () => { return true; } // И тут все ок
+const f2: voidFunc = () => {
+  return true;
+}; // И тут все ок
 interface voidInter {
   s: string[];
 }
-const voidSkills = ['Dev', 'DevOps', 'QA'];
+const voidSkills = ["Dev", "DevOps", "QA"];
 const voidUser: voidInter = {
   s: [],
-}
+};
 voidSkills.forEach((skill) => {
   voidUser.s.push(skill);
 });
+
+//-- Unknown --/
+// Тип переменной которой заранее мы не знаем
+let userInput: unknown;
+userInput = 5;
+userInput: string = "3213"; // Вот так ошибка
+async function getData() {
+  try {
+    await fetch("");
+  } catch (err) {
+    console.log(err.message); // так ошибка, потому что мы не знаем что придет
+    if (err instanceof Error) {
+      console.log(err.message); // Так норм и так лучше
+    }
+    const error = err as Error; // Также можно так
+  }
+}
+
+//-- Never --//
+// Никогда такое не произойдет, ни когда не будет присвоено значение
+// Ни когда не должна быть присвоена и никогда не должна вернуться
+// Тут если не типизировать то по умолчанию будет void, но на самом деле это never
+function generateError(message: string): never {
+  throw new Error(message);
+}
+
+const aaa: never = 1;
+
+function isString(x: string | number): boolean {
+  if (typeof x === "string") {
+    return true;
+  } else if (typeof x === "number") {
+    return false;
+  }
+  generateError('dasdas'); // Помогает ограничить ветки и какие то случаи. Он блокирует вертки, в которые мы не должны попасть
+}
+
+//-- Null --//
+// Разница null & undefined - если этого объекта нет, то null
+// если мы его не задали - это undefined
+const n: null = null;
+const n1: any = null;
+const n2:number = null;
+const n3:string = null;
+const n4:boolean = null;
+const n5:undefined = null;
+
+interface UserNull {
+  name: string;
+}
+
+function getUserNull() {
+  if (Math.random() > 0.5) {
+    return null; // Осознанное отсутствие пользователя
+  } else {
+    return {
+      name: "Oleg"
+    } as UserNull;
+  }
+}
+
+const userNull = getUserNull();
+const userNameNull = userNull.name;
