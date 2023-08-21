@@ -123,3 +123,25 @@ interface IUserPro {
 function testPass(user: IUserPro) {
   const t = user.password?.type
 }
+
+//-- Void --//
+// Это означает что функция ни чего не возвращает
+function logIdVoid(id: string | number): void {
+  console.log(id);
+}
+
+// Или мы можем вернуть что угодно, но этот возврат будет игнорироваться
+type voidFunc = () => void;
+
+const f1: voidFunc = () => {}; // Тут все ок
+const f2: voidFunc = () => { return true; } // И тут все ок
+interface voidInter {
+  s: string[];
+}
+const voidSkills = ['Dev', 'DevOps', 'QA'];
+const voidUser: voidInter = {
+  s: [],
+}
+voidSkills.forEach((skill) => {
+  voidUser.s.push(skill);
+});
