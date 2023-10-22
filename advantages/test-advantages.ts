@@ -63,3 +63,21 @@ function getSum(req: ReqData): IResponseSuccess | IResponseFailed {
     },
   };
 }
+
+type Res = IResponseSuccess | IResponseFailed;
+
+// Пишем typeGuard для статуса ответа
+function successGuard(req: Res): req is IResponseSuccess {
+  if (req.status === StatusRequest.SUCCESS) {
+    return true;
+  }
+  return false;
+}
+
+function isSuccess(req: Res): number {
+  if (successGuard(req)) {
+    return req.data.databaseId;
+  } else {
+    throw Error(req.data.errorMessage);
+  }
+}

@@ -182,7 +182,7 @@ function isString(x: string | number): boolean {
   } else if (typeof x === "number") {
     return false;
   }
-  generateError('dasdas'); // Помогает ограничить ветки и какие то случаи. Он блокирует вертки, в которые мы не должны попасть
+  generateError("dasdas"); // Помогает ограничить ветки и какие то случаи. Он блокирует вертки, в которые мы не должны попасть
 }
 
 //-- Null --//
@@ -190,10 +190,10 @@ function isString(x: string | number): boolean {
 // если мы его не задали - это undefined
 const n: null = null;
 const n1: any = null;
-const n2:number = null;
-const n3:string = null;
-const n4:boolean = null;
-const n5:undefined = null;
+const n2: number = null;
+const n3: string = null;
+const n4: boolean = null;
+const n5: undefined = null;
 
 interface UserNull {
   name: string;
@@ -204,10 +204,93 @@ function getUserNull() {
     return null; // Осознанное отсутствие пользователя
   } else {
     return {
-      name: "Oleg"
+      name: "Oleg",
     } as UserNull;
   }
 }
 
 const userNull = getUserNull();
 const userNameNull = userNull.name;
+
+//-- Приведение типов --//
+let a = 5;
+let b: string = a.toString();
+let e: string = new String(a).valueOf();
+let c: string = new String(a); // Так ошибка, потому что это объект
+
+// Явное преобразование и объединение двух объектов
+interface IUserType {
+  name: string;
+  email: string;
+  login: string;
+}
+
+const userType: IUserType = {
+  name: "Oleg",
+  email: "XXXXXXXXXXXX",
+  login: "oleg",
+};
+
+interface IAdmin {
+  name: string;
+  role: number;
+}
+
+function userToAdmin(user: IUserType): IAdmin {
+  return {
+    name: user.name,
+    role: 1,
+  };
+}
+
+//-- TypeGuard --//
+function isStringGuard(x: string | number): x is string {
+  return typeof x === "string";
+}
+
+function logIdGuard(id: string | number) {
+  if (isStringGuard(id)) {
+    console.log(id);
+  } else {
+    console.log(id);
+  }
+}
+
+function isAdmin(user: IUserType | IAdmin): user is IAdmin {
+  return "role" in user;
+}
+
+function isAdminAlternative(user: IUserType | IAdmin): user is IAdmin {
+  return (user as IAdmin).role !== undefined;
+}
+
+function setRoleZero(user: IUserType | IAdmin) {
+  if (isAdmin(user)) {
+    user.role = 0;
+  } else {
+    throw new Error("User is not admin");
+  }
+}
+
+//- Asserts -//
+// Это функция, в случае если условие не выполняется, то кидается ошибка
+interface UserAsserts {
+  name: string;
+}
+
+// Это способ сказать ts что в рамках функции мы производим проверку что объект является пользователем
+function assertsUser(obj: unknown): asserts obj is UserAsserts {
+  if (typeof obj === "object" && !!obj && "name" in obj) {
+    return;
+  }
+  throw new Error("Не пользователь");
+}
+
+const aAsserts = {};
+const bAsserts = null;
+// Если aAsserts не объект то кидаем ошибку, если объект то продолжаем с ним работать
+assertsUser(aAsserts);
+assertsUser(bAsserts);
+aAsserts.name = "Oleg";
+bAsserts.name = "sadad"; // Тут ошибка, потому что bAsserts это строка
+
